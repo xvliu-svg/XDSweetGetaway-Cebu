@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="宿务与薄荷岛十天顺时针旅行计划" />
+  <title>岛屿漫游 · 宿务薄荷岛旅行计划</title>
+  <style>
+    :root {
+      --ink: #28233c;
+      --muted: #746f87;
+      --lavender-50: #faf8ff;
+      --lavender-100: #f1edff;
+      --lavender-200: #e5dcff;
+      --lavender-400: #aa94ed;
+      --lavender-600: #7056c9;
+      --lavender-700: #563eab;
+      --line: #e9e4f3;
+      --card: #ffffff;
+      --shadow: 0 12px 32px rgba(76, 55, 137, .09);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--lavender-50);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+    }
+    button { font: inherit; }
+    a { color: inherit; text-decoration: none; }
+
+    .site-header {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(250, 248, 255, .9);
+      border-bottom: 1px solid rgba(229, 220, 255, .8);
+      backdrop-filter: blur(14px);
+    }
+    .nav {
+      width: min(1120px, calc(100% - 32px)); min-height: 68px; margin: auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.02em; }
+    .brand-mark {
+      display: grid; place-items: center; width: 35px; height: 35px; border-radius: 12px;
+      color: white; background: linear-gradient(135deg, #9f84ea, #684cc4); font-size: 18px;
+    }
+    .nav-links { display: none; list-style: none; padding: 0; margin: 0; }
+    .nav-links a { display: block; color: var(--muted); font-size: .94rem; font-weight: 650; }
+    .nav-links a:hover { color: var(--lavender-700); }
+    .nav-mode { min-width: 58px; min-height: 38px; padding: 7px 10px; cursor: pointer; border: 1px solid var(--lavender-200); border-radius: 11px; color: var(--lavender-700); background: white; font-size: .8rem; font-weight: 800; }
+    .nav-mode[aria-checked="true"] { color: white; border-color: var(--lavender-600); background: var(--lavender-600); }
+
+    .hero { overflow: hidden; position: relative; padding: 22px 16px 20px; background: linear-gradient(145deg, #ede7ff 0%, #faf8ff 55%, #e9f6ff 100%); }
+    .hero::before, .hero::after { content: ""; position: absolute; border-radius: 50%; filter: blur(4px); opacity: .58; }
+    .hero::before { width: 260px; height: 260px; right: -105px; top: -105px; background: #cfbeff; }
+    .hero::after { width: 180px; height: 180px; left: -100px; bottom: -115px; background: #b9e4eb; }
+    .hero-inner { position: relative; width: min(1120px, 100%); margin: auto; }
+    .eyebrow { display: inline-flex; gap: 7px; align-items: center; margin: 0 0 10px; color: var(--lavender-700); font-size: .78rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+    h1 { max-width: 790px; margin: 0; font-size: clamp(1.9rem, 6.5vw, 4rem); letter-spacing: -.065em; line-height: 1.08; }
+    .hero p { max-width: 600px; margin: 8px 0 0; color: var(--muted); font-size: clamp(.9rem, 2.6vw, 1.05rem); }
+    .trip-stats { display: grid; grid-template-columns: repeat(3, 1fr); max-width: 500px; margin-top: 20px; gap: 8px; }
+    .stat { padding: 12px 10px; border: 1px solid rgba(255,255,255,.85); border-radius: 14px; background: rgba(255,255,255,.55); text-align: center; }
+    .stat strong { display: block; color: var(--lavender-700); font-size: 1.12rem; }
+    .stat span { display: block; margin-top: 1px; color: var(--muted); font-size: .75rem; }
+
+    main { width: min(900px, calc(100% - 32px)); margin: 0 auto; padding: 18px 0 62px; }
+    .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 4px; }
+    .section-heading h2 { font-size: 1.25rem; }
+    .weather-status { display: inline-flex; align-items: center; min-height: 32px; max-width: 62%; padding: 6px 9px; border: 1px solid var(--lavender-200); border-radius: 999px; color: var(--lavender-700); background: white; font-size: .75rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    h2 { margin: 0; font-size: clamp(1.55rem, 4.5vw, 2rem); letter-spacing: -.04em; }
+    .section-heading p { margin: 0; color: var(--muted); font-size: .92rem; }
+    .notice { margin: 0 0 20px; padding: 13px 15px; border: 1px solid var(--lavender-200); border-radius: 15px; background: #f4f0ff; color: #58458c; font-size: .9rem; }
+    .notice b { margin-right: 6px; }
+    .day-switcher { position: sticky; top: 68px; z-index: 12; display: flex; gap: 9px; overflow-x: auto; margin: 0 -16px 22px; padding: 10px 16px 9px; background: var(--lavender-50); scrollbar-width: none; }
+    .day-switcher::-webkit-scrollbar { display: none; }
+    .day-tab { flex: 0 0 auto; min-width: 72px; min-height: 42px; padding: 9px 13px; cursor: pointer; border: 1px solid var(--lavender-200); border-radius: 12px; color: var(--muted); background: white; font-size: .78rem; font-weight: 800; letter-spacing: .04em; }
+    .day-tab.is-active, .day-tab:hover { border-color: var(--lavender-600); color: white; background: var(--lavender-600); box-shadow: 0 5px 14px rgba(112, 86, 201, .2); }
+    .itinerary { display: grid; gap: 14px; }
+    .day-card { display: none; overflow: hidden; border: 1px solid var(--line); border-radius: 19px; background: var(--card); box-shadow: var(--shadow); }
+    .day-card.is-current { display: block; animation: card-in .25s ease-out; }
+    @keyframes card-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .day-button { display: grid; grid-template-columns: auto 1fr 24px; width: 100%; min-height: 90px; padding: 14px 16px; cursor: pointer; border: 0; color: inherit; background: white; text-align: left; align-items: center; gap: 12px; }
+    .day-number { display: inline-flex; align-items: center; min-width: 62px; padding: 9px 12px; border-radius: 999px; background: var(--lavender-100); color: var(--lavender-700); font-size: .84rem; font-weight: 800; white-space: nowrap; }
+    .day-title { min-width: 0; }
+    .day-title strong { display: block; font-size: 1rem; }
+    .day-title span { display: block; overflow: hidden; color: var(--muted); font-size: .84rem; text-overflow: ellipsis; white-space: nowrap; }
+    .chevron { color: var(--lavender-600); font-size: 1.35rem; transition: transform .25s; }
+    .day-card.is-open .chevron { transform: rotate(180deg); }
+    .day-content { display: none; padding: 0 16px 18px; border-top: 1px solid var(--line); }
+    .day-card.is-open .day-content { display: block; }
+    .detail-grid { display: grid; gap: 16px; padding-top: 17px; }
+    .detail-label { display: flex; align-items: center; gap: 7px; margin: 0 0 5px; color: var(--lavender-700); font-size: .75rem; font-weight: 800; letter-spacing: .07em; }
+    .schedule-editor { overflow: hidden; border: 1px solid var(--line); border-radius: 12px; }
+    .schedule-row { display: grid; grid-template-columns: 78px minmax(0, 1fr); border-bottom: 1px solid var(--line); }
+    .schedule-row:last-child { border-bottom: 0; }
+    .schedule-view-row { display: grid; grid-template-columns: 78px minmax(0, 1fr); width: 100%; min-height: 47px; padding: 0; border: 0; border-bottom: 1px solid var(--line); color: inherit; background: white; text-align: left; }
+    .schedule-view-row:last-child { border-bottom: 0; }
+    .schedule-view-time { display: flex; align-items: center; padding: 9px 10px; border-right: 1px solid var(--line); color: var(--lavender-700); font-size: .86rem; font-weight: 750; }
+    .schedule-view-action { display: flex; align-items: center; padding: 9px 10px; color: #474155; font-size: .9rem; }
+    .schedule-view-row:active { background: var(--lavender-50); }
+    .copyable-text { position: relative; }
+    .copyable-text.is-copied::after { content: '已复制'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); padding: 3px 7px; border-radius: 7px; color: white; background: var(--lavender-600); font-size: .72rem; font-weight: 750; }
+    .schedule-input { width: 100%; min-height: 44px; padding: 9px 10px; border: 0; color: #474155; background: white; font: inherit; font-size: .88rem; outline-color: var(--lavender-400); }
+    .schedule-input:first-child { border-right: 1px solid var(--line); color: var(--lavender-700); font-weight: 750; }
+    .add-row { width: 100%; min-height: 40px; margin-top: 8px; cursor: pointer; border: 1px dashed var(--lavender-400); border-radius: 10px; color: var(--lavender-700); background: var(--lavender-50); font-size: .83rem; font-weight: 750; }
+    .editor-hint { margin: 0 0 7px; color: var(--muted); font-size: .77rem; }
+    .edit-only { display: none; }
+    .editor-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 16px; padding: 11px 13px; border: 1px solid var(--lavender-200); border-radius: 14px; background: white; }
+    .mode-hint { color: var(--muted); font-size: .82rem; }
+    .mode-button { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 4px 10px 4px 5px; cursor: pointer; border: 0; border-radius: 999px; color: #5f5871; background: var(--lavender-100); font-weight: 750; font-size: .8rem; }
+    .mode-knob { width: 27px; height: 27px; border-radius: 50%; background: white; box-shadow: 0 2px 5px rgba(59,43,111,.16); transition: transform .2s; }
+    body.is-editing .mode-button { color: white; background: var(--lavender-600); }
+    body.is-editing .mode-knob { transform: translateX(51px); }
+    .mode-button { position: relative; min-width: 108px; justify-content: flex-start; }
+    .mode-button span:last-child { position: absolute; right: 10px; }
+    body.is-editing .mode-button span:last-child { left: 10px; right: auto; }
+    .map-link { display: inline-flex; align-items: center; gap: 4px; color: var(--lavender-700); font-weight: 750; text-decoration: underline; text-decoration-color: var(--lavender-200); text-underline-offset: 3px; }
+    .location-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 9px; }
+    body.is-editing .view-only { display: none; }
+    body.is-editing .edit-only { display: block; }
+    body.is-editing .note-input { display: block; }
+    .travel-note { padding: 11px 12px; border-radius: 12px; background: #f8f6fc; color: #5d5769; font-size: .87rem; }
+    .travel-note:empty { display: none; }
+    .note-view { min-height: 48px; padding: 11px 12px; border-radius: 12px; background: #f8f6fc; color: #5d5769; font-size: .87rem; white-space: pre-line; }
+    .note-input { display: none; width: 100%; min-height: 82px; padding: 10px 11px; resize: vertical; border: 1px solid var(--lavender-200); border-radius: 12px; color: #474155; background: white; font: inherit; font-size: .87rem; outline-color: var(--lavender-400); }
+    .notes-section { grid-column: 1 / -1; }
+    .flight-panel { grid-column: 1 / -1; display: grid; gap: 9px; }
+    .flight-card { padding: 12px; border: 1px solid #dce9f5; border-radius: 13px; background: #f7fbff; }
+    .flight-airline { margin-bottom: 7px; color: #27796f; font-size: .84rem; font-weight: 800; }
+    .flight-route { display: grid; grid-template-columns: 52px 1fr; gap: 3px 9px; color: #494557; font-size: .86rem; }
+    .flight-route time { color: var(--ink); font-weight: 800; }
+    .stay { display: inline-block; padding: 5px 10px; border-radius: 999px; background: #eef9f7; color: #27796f; font-size: .85rem; font-weight: 700; }
+    .hotel-cn { margin: 0 0 5px; color: #27796f; font-size: .94rem; font-weight: 800; }
+    .hotel-en { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: .84rem; }
+    .copy-button { min-height: 30px; padding: 4px 9px; cursor: pointer; border: 1px solid var(--lavender-200); border-radius: 8px; color: var(--lavender-700); background: var(--lavender-50); font-size: .75rem; font-weight: 750; }
+    .copy-button:hover { border-color: var(--lavender-600); background: var(--lavender-100); }
+    .footer { padding: 22px 16px 35px; border-top: 1px solid var(--line); color: var(--muted); font-size: .84rem; text-align: center; }
+
+    @media (min-width: 720px) {
+      .nav { min-height: 74px; }
+      .nav-links { display: flex; align-items: center; gap: 29px; }
+      .hero { padding: 54px 32px 48px; }
+      .trip-stats { gap: 12px; }
+      .stat { padding: 14px; }
+      main { padding-top: 54px; }
+      .section-heading h2 { font-size: 1.6rem; }
+      .day-switcher { position: static; margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; }
+      .day-button { grid-template-columns: auto 1fr 26px; padding: 17px 22px; }
+      .day-number { min-width: 72px; padding: 11px 15px; }
+      .day-title strong { font-size: 1.08rem; }
+      .day-content { padding: 0 22px 22px; }
+      .detail-grid { grid-template-columns: minmax(0, 1.5fr) minmax(190px, .8fr); gap: 22px; }
+      .travel-note { grid-column: 1 / -1; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="主导航">
+      <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">✦</span>岛屿漫游</a>
+      <ul class="nav-links"><li><a href="#itinerary">行程</a></li><li><a href="#tips">出行提示</a></li><li><a href="#footer">关于计划</a></li></ul>
+      <button class="nav-mode" id="modeButton" type="button" role="switch" aria-label="切换浏览或编辑模式" aria-checked="false"><span id="modeLabel">浏览</span></button>
+    </nav>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="hero-inner">
+      <p class="eyebrow">✦ 9.25 — 10.4 · 菲律宾</p>
+      <h1>宿务 · 薄荷岛<br>10 天漫游</h1>
+      <p>顺时针海岛路线</p>
+    </div>
+  </section>
+
+  <main>
+    <section id="itinerary" aria-labelledby="itinerary-title">
+      <div class="section-heading"><h2 id="itinerary-title">每日行程</h2><span class="weather-status" id="weatherStatus" aria-live="polite">⌖ 正在获取当地天气</span></div>
+      <div class="day-switcher" id="daySwitcher" role="tablist" aria-label="按天查看行程"></div>
+      <div class="itinerary" id="itineraryList"></div>
+    </section>
+  </main>
+
+  <footer class="footer" id="footer">岛屿漫游 · 你的宿务与薄荷岛出行备忘</footer>
+
+  <script>
+    const days = [
+      {date:'9/25', day:'Day 1', title:'抵达薄荷岛', plan:'飞机 11:00 落地，前往薄荷岛。', stay:'巴塔拉度假村 · Bathala Resort 薄荷岛', transit:'OCEANJET — 下午 3:20 开船\n出发打车地址：Pier 1 Passenger Terminal / OceanJet Ticketing Office'},
+      {date:'9/26', day:'Day 2', title:'帕米拉砍岛与萤火虫夜游', plan:'上午 · 帕米拉砍岛\n下午 · 1. 十字架山\n2. 萤火虫夜游', stay:'巴塔拉度假村 · Bathala Resort 薄荷岛', transit:''},
+      {date:'9/27', day:'Day 3', title:'巴里卡萨岛', plan:'巴里卡萨岛 Balicasag Island', stay:'巴塔拉度假村 · Bathala Resort 薄荷岛', transit:''},
+      {date:'9/28', day:'Day 4', title:'前往锡基霍尔', plan:'早晨 6 点坐 Lutu 车到 Tagbilaran 码头\n上午 7 点船去锡基霍尔岛\n下午自由行', stay:'锡基霍尔 9/28', transit:'OCEANJET — 上午 7:30\n出发码头：TAGBILARAN'},
+      {date:'9/29', day:'Day 5', title:'锡基霍尔环岛游', plan:'锡基霍尔环岛游', stay:'锡基霍尔 9/29', transit:'提前预定去奥斯洛布的票'},
+      {date:'9/30', day:'Day 6', title:'奥斯洛布瀑布', plan:'早晨 8 点去奥斯洛布\n下午苏米龙岛或大瀑布', stay:'奥斯洛布', transit:''},
+      {date:'10/1', day:'Day 7', title:'鲸鲨与墨宝', plan:'早晨奥斯洛布鲸鲨\n中午去墨宝\n下午休息', stay:'墨宝', transit:''},
+      {date:'10/2', day:'Day 8', title:'沙丁鱼与湖溪', plan:'上午沙丁鱼\n下午墨宝·湖溪', stay:'墨宝', transit:''},
+      {date:'10/3', day:'Day 9', title:'返回宿务', plan:'睡醒出发宿务', stay:'宿务', transit:''},
+      {date:'10/4', day:'Day 10', title:'返程', plan:'12 点起飞', stay:'—', transit:''}
+    ];
+    const hotelInfo = {
+      '巴塔拉度假村 · Bathala Resort 薄荷岛': { cn: '巴塔拉度假村', en: 'Bathala Resort' },
+      '锡基霍尔 9/28': { cn: '英菲尼迪高地度假村', en: 'Infinity Heights Resort' },
+      '锡基霍尔 9/29': { cn: '马尔马林海滩别墅度假村', en: 'Villa Marmarine Beach Resort' },
+      '奥斯洛布': { cn: '经济住宿加早餐旅馆', en: 'Stay N Save Hotel' },
+      '墨宝': { cn: 'Speed8inn', en: 'Speed8inn' },
+      '宿务': { cn: '可可特尔宿务阿迪拉', en: 'Kokotel Cebu Adira' },
+      '—': { cn: '—', en: '—' }
+    };
+    const flightsByDay = {
+      0: [
+        { number: 'CX395', depart: '03:15 · 北京首都 T3', arrive: '06:55 · 香港国际 T1' },
+        { number: 'CX921', depart: '07:55 · 香港国际 T1', arrive: '10:50 · 麦克坦宿务 T2' }
+      ],
+      9: [
+        { number: 'CX948', depart: '12:00 · 麦克坦宿务 T2', arrive: '15:00 · 香港国际 T1' },
+        { number: 'CX312', depart: '17:00 · 香港国际 T1', arrive: '20:25 · 北京首都 T3' }
+      ]
+    };
+    const placesByDay = {
+      0: [],
+      3: []
+    };
+    const defaultSchedules = [
+      [['11:00', '抵达薄荷岛，办理入住'], ['15:20', 'OceanJet：Pier 1 Passenger Terminal → 薄荷岛']],
+      [['上午', '帕米拉砍岛'], ['下午', '十字架山'], ['傍晚', '萤火虫夜游']],
+      [['全天', '巴里卡萨岛 Balicasag Island']],
+      [['06:00', '乘 Lutu 车前往 Tagbilaran 码头'], ['07:30', 'OceanJet：Tagbilaran 码头 → 锡基霍尔岛'], ['下午', '自由行']],
+      [['全天', '锡基霍尔环岛游']],
+      [['08:00', '前往奥斯洛布'], ['下午', '苏米龙岛或大瀑布']],
+      [['早晨', '奥斯洛布鲸鲨'], ['中午', '前往墨宝'], ['下午', '休息']],
+      [['上午', '沙丁鱼'], ['下午', '墨宝 · 湖溪']],
+      [['全天', '睡醒出发宿务']],
+      [['12:00', '返程起飞']]
+    ];
+    const storageKey = 'cebu-bohol-schedules-v1';
+    const schedules = JSON.parse(localStorage.getItem(storageKey) || 'null') || defaultSchedules;
+    const defaultNotes = [
+      '', '', '', '',
+      '提前预定去奥斯洛布的票', '', '', '', '', ''
+    ];
+    const notesKey = 'cebu-bohol-notes-v1';
+    const notes = JSON.parse(localStorage.getItem(notesKey) || 'null') || defaultNotes;
+    if (schedules[0]?.[1]?.[1] === '乘坐 OceanJet 前往薄荷岛') schedules[0][1][1] = 'OceanJet：Pier 1 Passenger Terminal → 薄荷岛';
+    if (schedules[3]?.[1]?.[1] === '乘船前往锡基霍尔岛') schedules[3][1][1] = 'OceanJet：Tagbilaran 码头 → 锡基霍尔岛';
+    localStorage.setItem(storageKey, JSON.stringify(schedules));
+    const escapeAttribute = value => String(value).replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
+    const list = document.getElementById('itineraryList');
+    const daySwitcher = document.getElementById('daySwitcher');
+    const weatherStatus = document.getElementById('weatherStatus');
+    const weatherLabels = { 0: '晴朗', 1: '大致晴朗', 2: '局部多云', 3: '阴天', 45: '有雾', 48: '有雾', 51: '毛毛雨', 53: '毛毛雨', 55: '毛毛雨', 61: '小雨', 63: '中雨', 65: '大雨', 80: '阵雨', 81: '阵雨', 82: '强阵雨', 95: '雷暴' };
+    const loadLocalWeather = () => {
+      if (!navigator.geolocation) { weatherStatus.textContent = '⌖ 此设备不支持定位'; return; }
+      navigator.geolocation.getCurrentPosition(async position => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&timezone=auto`);
+          const weather = await response.json(); const current = weather.current;
+          weatherStatus.textContent = `⌖ 当地 ${weatherLabels[current.weather_code] || '天气'} · ${Math.round(current.temperature_2m)}°C`;
+        } catch { weatherStatus.textContent = '⌖ 暂时无法获取天气'; }
+      }, () => { weatherStatus.textContent = '⌖ 允许定位以显示天气'; }, { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 });
+    };
+    loadLocalWeather();
+    daySwitcher.innerHTML = days.map((item, index) => `<button class="day-tab ${index === 0 ? 'is-active' : ''}" role="tab" aria-selected="${index === 0}" data-day="${index}">DAY ${index + 1}</button>`).join('');
+    list.innerHTML = days.map((item, index) => { const hotel = hotelInfo[item.stay]; const flightCards = (flightsByDay[index] || []).map(flight => `<div class="flight-card"><div class="flight-airline">✈ 国泰航空 · ${flight.number}</div><div class="flight-route"><time>起飞</time><span>${flight.depart}</span><time>抵达</time><span>${flight.arrive}</span></div></div>`).join(''); const placeLinks = (placesByDay[index] || []).map(place => `<a class="map-link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.query)}" target="_blank" rel="noopener">⌖ ${place.label}</a>`).join(''); const noteText = notes[index] || ''; const viewRows = schedules[index].map(entry => { const isEmpty = !entry[0].trim() && !entry[1].trim(); return `<button class="schedule-view-row copyable-text" type="button" data-copy-text="${escapeAttribute(entry[1])}" style="${isEmpty ? 'display:none' : ''}"><span class="schedule-view-time">${escapeAttribute(entry[0])}</span><span class="schedule-view-action">${escapeAttribute(entry[1])}</span></button>`; }).join(''); const scheduleRows = schedules[index].map((entry, row) => `<div class="schedule-row"><input class="schedule-input" data-day="${index}" data-row="${row}" data-field="0" aria-label="时间" value="${escapeAttribute(entry[0])}"><input class="schedule-input" data-day="${index}" data-row="${row}" data-field="1" aria-label="具体行程" value="${escapeAttribute(entry[1])}"></div>`).join(''); return `
+      <article class="day-card ${index === 0 ? 'is-open is-current' : ''}" id="day-card-${index}">
+        <button class="day-button" aria-expanded="${index === 0}" aria-controls="day-${index}">
+          <span class="day-number">${item.date}</span><span class="day-title"><strong>${item.title}</strong><span>${item.plan.split('\n')[0]}</span></span><span class="chevron" aria-hidden="true">⌄</span>
+        </button>
+        <div class="day-content" id="day-${index}"><div class="detail-grid">
+          ${flightCards ? `<div class="flight-panel"><p class="detail-label">✈ 航班信息</p>${flightCards}</div>` : ''}
+          <div><p class="detail-label">✦ 行程安排</p><div class="schedule-editor"><div class="view-only schedule-view">${viewRows}</div><div class="edit-only schedule-edit">${scheduleRows}</div></div><button class="add-row edit-only" type="button" data-day="${index}">＋ 添加一项</button></div>
+          <div><p class="detail-label">⌂ 住宿</p><p class="hotel-cn">${hotel.cn}</p><div class="hotel-en"><a class="map-link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotel.en)}" target="_blank" rel="noopener">⌖ ${hotel.en}</a><button class="copy-button" type="button" data-copy="${hotel.en}" aria-label="复制 ${hotel.en}">复制</button></div></div>
+          <div class="notes-section"><p class="detail-label">✎ 备注</p><div class="note-view view-only copyable-text" data-copy-text="${escapeAttribute(noteText)}">${escapeAttribute(noteText || '暂无备注')}${placeLinks ? `<div class="location-links">${placeLinks}</div>` : ''}</div><textarea class="note-input" data-note-day="${index}" aria-label="备注">${escapeAttribute(noteText)}</textarea></div>
+        </div></div>
+      </article>`; }).join('');
+
+    const setActiveDay = (index, scroll) => {
+      document.querySelectorAll('.day-tab').forEach((tab, tabIndex) => { const active = tabIndex === index; tab.classList.toggle('is-active', active); tab.setAttribute('aria-selected', active); if (active) tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); });
+      document.querySelectorAll('.day-card').forEach((card, cardIndex) => { const active = cardIndex === index; card.classList.toggle('is-current', active); if (active) { card.classList.add('is-open'); card.querySelector('.day-button').setAttribute('aria-expanded', 'true'); } });
+      const card = document.getElementById(`day-card-${index}`);
+      if (scroll) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    document.querySelectorAll('.day-tab').forEach(tab => tab.addEventListener('click', () => setActiveDay(Number(tab.dataset.day), true)));
+    document.querySelectorAll('.day-button').forEach((button, index) => button.addEventListener('click', () => {
+      const card = button.closest('.day-card'); const open = card.classList.toggle('is-open'); button.setAttribute('aria-expanded', open); if (open) setActiveDay(index, false);
+    }));
+    const modeButton = document.getElementById('modeButton'); const modeLabel = document.getElementById('modeLabel');
+    const setEditing = editing => { document.body.classList.toggle('is-editing', editing); modeButton.setAttribute('aria-checked', editing); modeLabel.textContent = editing ? '编辑' : '浏览'; };
+    modeButton.addEventListener('click', () => setEditing(!document.body.classList.contains('is-editing')));
+    const saveSchedules = () => localStorage.setItem(storageKey, JSON.stringify(schedules));
+    const copyText = async text => { try { await navigator.clipboard.writeText(text); } catch { const field = document.createElement('textarea'); field.value = text; document.body.appendChild(field); field.select(); document.execCommand('copy'); field.remove(); } };
+    list.addEventListener('input', event => {
+      if (event.target.classList.contains('note-input')) { const input = event.target; const day = Number(input.dataset.noteDay); notes[day] = input.value; localStorage.setItem(notesKey, JSON.stringify(notes)); const noteView = input.closest('.notes-section').querySelector('.note-view'); noteView.dataset.copyText = input.value; noteView.firstChild.nodeValue = input.value || '暂无备注'; return; }
+      if (!event.target.classList.contains('schedule-input')) return;
+      const input = event.target; const day = Number(input.dataset.day); const row = Number(input.dataset.row); const field = Number(input.dataset.field); schedules[day][row][field] = input.value; saveSchedules();
+      const viewRow = input.closest('.day-card').querySelectorAll('.schedule-view-row')[row]; if (field === 0) viewRow.querySelector('.schedule-view-time').textContent = input.value; else { viewRow.dataset.copyText = input.value; viewRow.querySelector('.schedule-view-action').textContent = input.value; }
+      const editRow = input.closest('.schedule-row'); const timeVal = editRow.querySelector('[data-field="0"]').value.trim(); const actionVal = editRow.querySelector('[data-field="1"]').value.trim(); viewRow.style.display = (!timeVal && !actionVal) ? 'none' : '';
+    });
+    list.addEventListener('click', event => {
+      const button = event.target.closest('.add-row'); if (!button) return;
+      const day = Number(button.dataset.day); const row = schedules[day].length; const card = button.closest('.day-card'); schedules[day].push(['', '']); saveSchedules();
+      card.querySelector('.schedule-edit').insertAdjacentHTML('beforeend', `<div class="schedule-row"><input class="schedule-input" data-day="${day}" data-row="${row}" data-field="0" aria-label="时间" value=""><input class="schedule-input" data-day="${day}" data-row="${row}" data-field="1" aria-label="具体行程" value=""></div>`);
+      card.querySelector('.schedule-view').insertAdjacentHTML('beforeend', '<button class="schedule-view-row copyable-text" type="button" data-copy-text="" style="display:none"><span class="schedule-view-time"></span><span class="schedule-view-action"></span></button>');
+      card.querySelector(`.schedule-edit [data-row="${row}"][data-field="0"]`).focus();
+    });
+    let pressTimer; let wasLongPress = false;
+    list.addEventListener('pointerdown', event => { const target = event.target.closest('.copyable-text'); if (!target || document.body.classList.contains('is-editing')) return; wasLongPress = false; pressTimer = setTimeout(async () => { wasLongPress = true; await copyText(target.dataset.copyText); target.classList.add('is-copied'); setTimeout(() => target.classList.remove('is-copied'), 1300); }, 550); });
+    list.addEventListener('pointerup', () => clearTimeout(pressTimer));
+    list.addEventListener('pointercancel', () => clearTimeout(pressTimer));
+    document.querySelectorAll('.copy-button').forEach(button => button.addEventListener('click', async () => { const original = button.textContent; await copyText(button.dataset.copy); button.textContent = '已复制'; setTimeout(() => { button.textContent = original; }, 1500); }));
+  </script>
+</body>
+</html>
